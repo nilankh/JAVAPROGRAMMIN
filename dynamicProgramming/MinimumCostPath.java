@@ -21,44 +21,44 @@
 package dynamicProgramming;
 import java.util.Scanner;
 public class MinimumCostPath {
-	
-	
+
+
 	public static int minCostPathRe(int cost[][]) {
 		return minCostPathReHelper(cost, 0, 0);
 	}
 	public static int minCostPathReHelper(int[][] cost, int i, int j) {
-		
-		
-		
+
+
+
 		int m = cost.length;
 		int n = cost[0].length;
-//		special case
+		//		special case
 		if(i == m - 1 && j == n - 1) {
 			return cost[i][j];
 		}
-//		Base case
+		//		Base case
 		if(i >= n || j >= n) {
 			return Integer.MAX_VALUE;
 		}
 		int ans1 = minCostPathReHelper(cost, i + 1, j);
 		int ans2 = minCostPathReHelper(cost, i, j + 1);
 		int ans3 = minCostPathReHelper(cost, i + 1, j + 1);
-		
+
 		int myAns = cost[i][j] + Math.min(ans1, Math.min(ans2, ans3));
 		return myAns;
 	}
-	
+
 	public static int minCostPathReMemo(int[][]cost, int [][] dp) {
 		return minCostPathReMemoHelper(cost, dp, 0, 0);
 	}
 	public static int minCostPathReMemoHelper(int[][] cost, int[][] dp,  int i, int j ) {
 		int m = cost.length;
 		int n = cost[0].length;
-//		special case
+		//		special case
 		if(i == m - 1 && j == n - 1) {
 			return cost[i][j];
 		}
-//		Base case
+		//		Base case
 		if(i >= n || j >= n) {
 			return Integer.MAX_VALUE;
 		}
@@ -69,38 +69,38 @@ public class MinimumCostPath {
 		}else {
 			ans1 = dp[i + 1][j];
 		}
-		
+
 		if(dp[i][j + 1] == Integer.MIN_VALUE) {
 			ans2 = minCostPathReHelper(cost, i, j + 1);
 			dp[i][j + 1] = ans2;
 		}else {
 			ans2 = dp[i][j + 1];
 		}
-		
+
 		if(dp[i + 1][j + 1] == Integer.MIN_VALUE) {
 			ans3 = minCostPathReHelper(cost, i + 1, j + 1);
 			dp[i + 1][j + 1] = ans3;
 		}else {
 			ans3 = dp[i + 1][j + 1];
 		}
-		
-		
+
+
 		int myAns = cost[i][j] + Math.min(ans1, Math.min(ans2, ans3));
 		return myAns;
 	}
-	
-	public static int minimumCostIterative(int[][] cost) {
+
+	public static int minimumCostIterativeBU(int[][] cost) {
 		int m = cost.length;
 		int n = cost[0].length;
-		
+
 		int[][] dp = new int[m + 1][n + 1];
-		
+
 		for(int i = 0; i < dp.length;i++) {
 			for(int j = 0; j < dp[i].length; j++) {
 				dp[i][j] = Integer.MAX_VALUE;
 			}
 		}
-		
+
 		for(int i = m - 1; i >= 0; i--) {
 			for(int j = n - 1; j >= 0; j--) {
 				if(i == m - 1 && j == n - 1) {
@@ -115,6 +115,31 @@ public class MinimumCostPath {
 		}
 		return dp[0][0];
 	}
+
+	public static int minimumCostTopDown(int[][] cost) {
+		int m = cost.length;
+		int n = cost[0].length;
+		int[][] dp = new int[m + 1][n + 1];
+		for(int i = 0; i < dp.length;i++) {
+			for(int j = 0; j < dp[i].length; j++) {
+				dp[i][j] = Integer.MAX_VALUE;
+			}
+		}
+		for(int i = 1; i < m + 1; i++) {
+			for(int j = 1; j < n + 1; j++) {
+				if(i == 1 && j == 1) {
+					dp[i][j] = cost[0][0];
+					continue;
+				}else {
+					int ans1 = dp[i - 1][j];
+					int ans2 = dp[i][j - 1];
+					int ans3 = dp[i - 1][j - 1];
+					dp[i][j] = cost[i - 1][j - 1] + Math.min(ans1, Math.min(ans2, ans3));
+				}
+			}
+		}
+		return dp[m][n];
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner s = new Scanner(System.in);
@@ -126,16 +151,17 @@ public class MinimumCostPath {
 				cost[i][j] = s.nextInt();
 			}
 		}
-		
+
 		int[][] dp = new int[cost.length + 1][cost[0].length + 1];
 		for(int i = 0; i < dp.length; i++) {
 			for(int j = 0; j < dp[0].length; j++) {
 				dp[i][j] = Integer.MIN_VALUE;
 			}
 		}
-//		System.out.println(minCostPathRe(cost));
-//		System.out.println(minCostPathReMemo(cost, dp));
-		System.out.println(minimumCostIterative(cost));
+		//		System.out.println(minCostPathRe(cost));
+		//		System.out.println(minCostPathReMemo(cost, dp));
+//				System.out.println(minimumCostIterativeBU(cost));
+		System.out.println(minimumCostTopDown(cost));
 	}
 
 
