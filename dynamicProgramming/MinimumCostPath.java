@@ -118,8 +118,11 @@ public class MinimumCostPath {
 
 	public static int minimumCostTopDown(int[][] cost) {
 		int m = cost.length;
+		
 		int n = cost[0].length;
+		
 		int[][] dp = new int[m + 1][n + 1];
+//		System.out.println(dp[0].length);
 		for(int i = 0; i < dp.length;i++) {
 			for(int j = 0; j < dp[i].length; j++) {
 				dp[i][j] = Integer.MAX_VALUE;
